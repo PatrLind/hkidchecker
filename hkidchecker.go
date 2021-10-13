@@ -19,10 +19,16 @@ func init() {
 	hkidRegExp = regexp.MustCompile(`^[A-Z]{1,2}[0-9]{6}\([0-9A]{1}\)$`)
 }
 
-// CheckHKID validates a Hong Kong ID
+// CheckHKIDFormat checks the format of a Hong Kong ID without calculating
+// and checking the checksum
+func CheckHKIDFormat(hkid string) bool {
+	return hkidRegExp.MatchString(strings.TrimSpace(hkid))
+}
+
+// CheckHKID checks the format and validates the checksum of a Hong Kong ID
 func CheckHKID(hkid string) bool {
 	hkid = strings.TrimSpace(hkid)
-	if !hkidRegExp.MatchString(hkid) {
+	if !CheckHKIDFormat(hkid) {
 		// HKID is not matching the basic format check
 		return false
 	}
