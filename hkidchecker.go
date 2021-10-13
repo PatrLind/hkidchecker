@@ -23,10 +23,13 @@ func init() {
 func CheckHKID(hkid string) bool {
 	hkid = strings.TrimSpace(hkid)
 	if !hkidRegExp.MatchString(hkid) {
+		// HKID is not matching the basic format check
 		return false
 	}
 
 	if len(hkid) != hkidMaxLen {
+		// If only one letter is used in the beginning, add a padding space
+		// otherwise the calculation will not work
 		hkid = " " + hkid
 	}
 
@@ -36,12 +39,17 @@ func CheckHKID(hkid string) bool {
 		var num int
 		ch := hkid[i]
 		if ch == ' ' {
+			// Space = 36
 			num = 36
 		} else if ch >= '0' && ch <= '9' {
+			// 0-9 = 0-9
 			num = int(hkid[i] - '0')
 		} else {
+			// A-Z = 10-35
 			num = int(hkid[i]-'A') + 10
 		}
+		// Each char num is multiplied with a number starting with 9 and
+		// decreasing for each position down to 2
 		sum += num * ((hkidDataLen + 1) - i)
 	}
 
@@ -49,8 +57,10 @@ func CheckHKID(hkid string) bool {
 	const modulo = 11
 	remainder := sum % modulo
 	if remainder == 0 {
+		// Special case 0
 		calcCheck = "0"
 	} else if remainder == 1 {
+		// Special case A
 		calcCheck = "A"
 	} else {
 		calcCheck = strconv.Itoa(modulo - remainder)
