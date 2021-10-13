@@ -47,13 +47,13 @@ func CheckHKID(hkid string) bool {
 
 	var calcCheck string
 	const modulo = 11
-	reminder := sum % modulo
-	if reminder == 0 {
+	remainder := sum % modulo
+	if remainder == 0 {
 		calcCheck = "0"
-	} else if reminder == 1 {
+	} else if remainder == 1 {
 		calcCheck = "A"
 	} else {
-		calcCheck = strconv.Itoa(modulo - reminder)
+		calcCheck = strconv.Itoa(modulo - remainder)
 	}
 	return calcCheck == checkDigit
 }
